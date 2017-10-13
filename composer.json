@@ -1,0 +1,25 @@
+{
+  "name": "interso/nubex-agent-api-client",
+  "description": "API client nubex agent project)",
+  "minimum-stability": "alpha",
+  "license": "MIT",
+  "support": {
+    "issues": "https://github.com/interso/nubex-agent-api-client/issues",
+    "source": "https://github.com/interso/nubex-agent-api-client"
+  },
+  "authors": [
+    {
+      "name": "Stanislav Vinogradov",
+      "email": "vstas@interso.ru"
+    }
+  ],
+  "require": {
+    "php": ">=5.5.0",
+    "guzzlehttp/guzzle": "6.2.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Interso\\NubexPrototypeAPI\\": "src/"
+    }
+  }
+}
