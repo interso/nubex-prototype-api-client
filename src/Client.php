@@ -47,13 +47,41 @@ class Client
 
 
     /**
+     * @return array
+     */
+    public function getHttpOptions()
+    {
+        return $this->httpOptions;
+    }
+
+
+    /**
+     * @param array $options
+     */
+    public function setHttpOptions(array $options = array())
+    {
+        $this->httpOptions = $options;
+    }
+
+
+    /**
+     * @param string $name
+     * @param        $value
+     */
+    public function setHttpOption($name, $value)
+    {
+        $this->httpOptions[$name] = $value;
+    }
+
+
+    /**
      * Prepares URI for the request.
      *
      * @param string $endpoint
      *
      * @return string
      */
-    protected function prepareUri($endpoint)
+    public function prepareUri($endpoint)
     {
         return $this->baseUrl.'/'.$endpoint;
     }
@@ -70,10 +98,11 @@ class Client
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \RuntimeException
      */
-    public function query($uri, array $params = [], $method = self::METHOD_POST)
+    protected function query($uri, array $params = [], $method = self::METHOD_POST)
     {
         $headers = [
             'Content-Type' => 'application/json',
+            'Accept'       => 'application/json',
             'Api-Key'      => $this->apiKey,
         ];
 
@@ -88,11 +117,11 @@ class Client
             return $result;
         } catch (\Exception $exception) {
             $result = ['success' => false, 'exception' => $exception];
-
             return $result;
         }
 
         $body = (string)$response->getBody();
+
         $result = json_decode($body, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
@@ -100,6 +129,62 @@ class Client
         }
 
         return $result;
+    }
+
+
+    /**
+     * @param       $endpoint
+     * @param array $params
+     *
+     * @return array|mixed
+     * @throws \RuntimeException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function get($endpoint, array $params = [])
+    {
+        return $this->query($this->prepareUri($endpoint), $params, self::METHOD_GET);
+    }
+
+
+    /**
+     * @param       $endpoint
+     * @param array $params
+     *
+     * @return array|mixed
+     * @throws \RuntimeException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function post($endpoint, array $params = [])
+    {
+        return $this->query($this->prepareUri($endpoint), $params, self::METHOD_POST);
+    }
+
+
+    /**
+     * @param       $endpoint
+     * @param array $params
+     *
+     * @return array|mixed
+     * @throws \RuntimeException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function put($endpoint, array $params = [])
+    {
+        return $this->query($this->prepareUri($endpoint), $params, self::METHOD_PUT);
+    }
+
+
+    /**
+     * @param       $endpoint
+     * @param array $params
+     *
+     * @return array|mixed
+     * @throws \RuntimeException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function delete($endpoint, array $params = [])
+    {
+        return $this->query($this->prepareUri($endpoint), $params, self::METHOD_DELETE);
     }
 
 }
